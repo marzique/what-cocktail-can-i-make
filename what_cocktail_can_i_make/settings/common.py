@@ -1,7 +1,8 @@
-# Python imports
-from os.path import abspath, basename, dirname, join, normpath
 import sys
+import os
+from os.path import abspath, basename, dirname, join, normpath
 
+import environ
 
 # ##### PATH CONFIGURATION ################################
 
@@ -10,6 +11,13 @@ DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
 # fetch the project_root
 PROJECT_ROOT = dirname(DJANGO_ROOT)
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# .env file in project root
+environ.Env.read_env(join(PROJECT_ROOT, '.env'))
 
 # the name of the whole site
 SITE_NAME = basename(DJANGO_ROOT)
@@ -36,15 +44,19 @@ sys.path.append(normpath(join(PROJECT_ROOT, 'apps')))
 
 
 # ##### APPLICATION CONFIGURATION #########################
-
-# these are the apps
-DEFAULT_APPS = [
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # libs
+    'rest_framework',
+    'django_filters',
+    'django_extensions',
+    # project apps
+    'cocktails',
 ]
 
 # Middlewares
@@ -110,8 +122,29 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 
+# DRF
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 # ##### DEBUG CONFIGURATION ###############################
-DEBUG = False
+DEBUG = env('DEBUG', default=False)
+
+if 'RDS_HOSTNAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
+    }
 
 
 # finally grab the SECRET KEY
@@ -126,3 +159,6 @@ except IOError:
             f.write(SECRET_KEY)
     except IOError:
         raise Exception('Could not open %s for writing!' % SECRET_FILE)
+
+# ENV CONSTANTS
+PIXABAY_KEY = env('PIXABAY_KEY', default='no key found')
