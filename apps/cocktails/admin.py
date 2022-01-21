@@ -20,7 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Cocktail)
 class CocktailAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'ingredients_str')
+    list_display = ('name', 'category', 'ingredients_str', 'image')
 
     def ingredients_str(self, obj):
         return ', '.join([ingredient.name for ingredient in obj.ingredients.all()])
