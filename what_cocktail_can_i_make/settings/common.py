@@ -22,12 +22,6 @@ environ.Env.read_env(join(PROJECT_ROOT, '.env'))
 # the name of the whole site
 SITE_NAME = basename(DJANGO_ROOT)
 
-# collect static files here
-STATIC_ROOT = join(PROJECT_ROOT, 'run', 'static')
-
-# collect media files here
-MEDIA_ROOT = join(PROJECT_ROOT, 'run', 'media')
-
 # look for static assets here
 STATICFILES_DIRS = [
     join(PROJECT_ROOT, 'static'),
