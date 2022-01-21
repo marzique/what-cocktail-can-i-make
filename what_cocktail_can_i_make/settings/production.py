@@ -28,6 +28,7 @@ if 'AWS_ACCESS_KEY_ID' in os.environ:
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
+STATICFILES_DIRS = None
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
