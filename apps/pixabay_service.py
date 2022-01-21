@@ -26,4 +26,5 @@ class PixabayImageService:
 
     def get_image_url_by_keyword(self, keyword: str) -> str:
         data = self._get_response(keyword)
-        return self._parse_image_url(data)
+        url = self._parse_image_url(data)
+        return url

@@ -45,7 +45,7 @@ class Cocktail(models.Model):
     glass = models.ForeignKey(Glass, on_delete=models.PROTECT)
     image = models.ImageField(blank=True, null=True, upload_to='cocktails')
     iba = models.BooleanField(default=False)
-    color = ArrayField(models.CharField(max_length=6), default=list)
+    color = ArrayField(models.CharField(max_length=6), default=list, blank=True)
     garnish = ArrayField(models.CharField(max_length=128), default=list, blank=True)
     recipe = models.TextField()
 

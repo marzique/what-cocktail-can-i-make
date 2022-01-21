@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Ingredient, Category, Glass, Cocktail
+from apps.cocktails.models import Ingredient, Category, Glass, Cocktail
 
 
 @admin.register(Ingredient)

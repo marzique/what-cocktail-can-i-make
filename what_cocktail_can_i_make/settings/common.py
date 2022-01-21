@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     # project apps
-    'cocktails',
+    'apps.cocktails.apps.CocktailsConfig',
 ]
 
 # Middlewares
@@ -124,11 +124,14 @@ MEDIA_URL = '/media/'
 
 # DRF
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
 }
 
 # ##### DEBUG CONFIGURATION ###############################
