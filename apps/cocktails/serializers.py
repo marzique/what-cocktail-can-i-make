@@ -11,7 +11,7 @@ class BaseSerializer:
     def get_hostname(self, instance):
         try:
             response = requests.get('http://169.254.169.254/latest/meta-data/hostname')
-            return response.json()
+            return response.text
         except requests.exceptions.ConnectionError:
             return 'not aws environment'
 
