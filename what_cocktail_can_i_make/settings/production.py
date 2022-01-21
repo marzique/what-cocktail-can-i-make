@@ -26,9 +26,10 @@ if 'AWS_ACCESS_KEY_ID' in os.environ:
     AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
 MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
