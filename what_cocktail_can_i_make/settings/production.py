@@ -2,26 +2,26 @@ from .development import *
 
 ALLOWED_HOSTS = ['cocktails-dev.eu-central-1.elasticbeanstalk.com']
 
+# Used to authenticate with S3
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 
-USE_S3 = os.getenv('USE_S3')
+if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
+    STATICFILES_STORAGE = 'what_cocktail_can_i_make.storage_backends.StaticStorage'
+    DEFAULT_FILE_STORAGE = 'what_cocktail_can_i_make.storage_backends.MediaStorage'
 
-if USE_S3:
-    # aws settings
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    # s3 static settings
-    AWS_LOCATION = 'static'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-else:
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(DJANGO_ROOT, 'static')
+CDN_ENABLED = False
+AWS_S3_SECURE_URLS = False
 
-STATICFILES_DIRS = (os.path.join(DJANGO_ROOT, 'static'),)
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'cocktails-bucket')
+AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN', None)
+AWS_QUERYSTRING_AUTH = False
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(DJANGO_ROOT, 'media')
+STATIC_LOCATION = 'static'
+MEDIA_LOCATION = 'media'
+
+if AWS_S3_CUSTOM_DOMAIN:
+    STATIC_URL = '{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, STATIC_LOCATION)
+    MEDIA_URL = '{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, MEDIA_LOCATION)
+
+    AWS_DEFAULT_ACL = None
