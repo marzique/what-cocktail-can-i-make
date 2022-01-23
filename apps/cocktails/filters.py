@@ -16,11 +16,10 @@ class CocktailsFilter(django_filters.FilterSet):
 
     def has_ingredients(self, queryset, name, value):
         if value:
-            ing_names = list(set([i.strip() for i in value.split(',') if i]))
-            ingredients = Ingredient.objects.filter(name__in=ing_names)
-            queryset = queryset.annotate(
-                total_ingredients=Count('ingredients', distinct=True)
-            ).filter(
-                ingredients__in=ingredients
-            ).filter(total_ingredients__lte=ingredients.count())
+            ing_names = list(set([i.lower().strip() for i in value.split(',') if i]))
+            ingredients_ids = Ingredient.objects.filter(name__in=ing_names).values_list('id', flat=True)
+            for cocktail in queryset:
+                cocktail_ingredients_ids = cocktail.ingredients.values_list('id', flat=True)
+                if not set(cocktail_ingredients_ids).issubset(ingredients_ids):
+                    queryset = queryset.exclude(id=cocktail.id)
         return queryset
