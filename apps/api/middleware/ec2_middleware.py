@@ -8,7 +8,10 @@ from functools import lru_cache
 @lru_cache(maxsize=None)
 def _get_hostname():
     try:
-        response = requests.get('http://169.254.169.254/latest/meta-data/hostname')
+        response = requests.get(
+            'http://169.254.169.254/latest/meta-data/hostname',
+            timeout=0.01
+        )
         return response.text
     except requests.exceptions.ConnectionError:
         return 'not aws environment'
